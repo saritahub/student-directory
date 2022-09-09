@@ -29,10 +29,12 @@
 #     students #return array of hashes of the students 
 # end 
 @students = [] #Empty array visible to all methods 
-@cohort_month = ['january','february','march','april','may','june','july','august','september','october','november','december']
+@cohort_month = ['january','september','october'] #Now cohort month can only be January, September or December
+@existing_cohorts = []
 
 def input_students
     puts "Please enter the name, cohort, hobby and favourite food of each student.\n"
+    puts "Cohort months: January, September or October.\n"
     puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
     name_cohort_hobby_food = gets.chomp 
     
@@ -77,6 +79,7 @@ def input_students
             puts "Now we have #{@students.count} students\n"
         end 
         puts "\nPlease enter the name, cohort, hobby and favourite food of the next student.\n"
+        puts "Cohort months: January, September or October.\n"
         puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n"
         name_cohort_hobby_food = gets.chomp
     end
@@ -87,7 +90,8 @@ def cohort_month(students)
     cohort_each = students.map {|student|
         student[:cohort]
     }
-    cohort_month = cohort_each.uniq
+    cohort_month = cohort_each.uniq   #List of existing cohorts 
+    @existing_cohorts = cohort_month #Add all existung cohorts to the existing cohort array 
 end 
 
 #Print list of students
@@ -97,23 +101,42 @@ def print_header
     puts divider.center(30)
 end 
 
+
 #Iterate over the students array to print each name
-def print(students, cohort_month) #names placeholder
-      cohort_month.each do |cohortmonth|
-        students.each_with_index do |student, index|
-          if student[:cohort] == cohortmonth
-            namecohort = "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+def print 
+    @existing_cohorts = @students.map {|student| student[:cohort]}.sort.uniq
+    index = 0
+    @students.each { |student|
+      if student[:cohort] == @existing_cohorts[0]
+        namecohort = "#{student[:name]} (#{student[:cohort]} cohort)"
             puts namecohort.center(30)
             puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
             puts "\n"
-          # puts interests.center(30)
-          index += 1
-      end
-    end 
+         end 
+         index += 1
+    }
+
+    @students.each {|student|
+        if student[:cohort] == @existing_cohorts[1]
+            namecohort =  "#{student[:name]} (#{student[:cohort]} cohort)"
+                puts namecohort.center(30)
+                puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
+                puts "\n"
+             end 
+             index += 1
+    }
+
+    @students.each {|student|
+        if student[:cohort] == @existing_cohorts[2]
+            namecohort = "#{student[:name]} (#{student[:cohort]} cohort)"
+                puts namecohort.center(30)
+                puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
+                puts "\n"
+             end 
+             index += 1
+    }
 end
 
-end
-  
 
 
 #Finally, we print the total number of students using the array.count method
@@ -124,6 +147,7 @@ end
 students = input_students #The outcome of the method input_students 
 print_header
 cohort_month = cohort_month(@students)
-print(students, cohort_month) #Again, outcome of method input_students
+print #(students, cohort_month) #Again, outcome of method input_students
 print_footer(students) #Outcome of method input_students
+
 
