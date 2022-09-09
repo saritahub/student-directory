@@ -29,130 +29,101 @@
 #     students #return array of hashes of the students 
 # end 
 @students = [] #Empty array visible to all methods 
-#Chapter 8: Exercise 5
+@cohort_month = ['january','february','march','april','may','june','july','august','september','october','november','december']
+
 def input_students
-    puts "Please enter the student's full name:"
-    puts "To finish, just hit return twice" #So 'name' will be empty, and while loop breaks 
-    # students = [] #added student outside of methods
-    name = gets.chomp
-  
-    #Add extra variables
-    while !name.empty? do
-      puts "Please enter your fave hobby:"
-      hobby = gets.chomp
-        if hobby.empty?
-          break
-        else 
-          puts "Please enter your country of birth:"
-          countryofbirth = gets.chomp 
-          if countryofbirth.empty?
-            break
-          else 
-            puts "Please enter your height in centimeters:"
-            height = gets.chomp 
-              if height.empty?
-                break 
-              else 
-              @students << {name: name, cohort: :november, hobby: :hobby, countryofbirth: :countryofbirth, height: :height}
-
-    # while !name.empty? do 
-    #New hash pushed to students array
-        #key = name: = value of name, value = cohort: :november (hardcoded)
-      @students << {name: name, cohort: :november, hobby: hobby, countryofbirth: countryofbirth, height: height}
-      puts "Now we have #{@students.count - 1} students"
-        
-      puts "Please enter the next student's full name:"
-      name = gets.chomp
-        if name.empty?
-          break
-        else 
-          puts "Please enter your fave hobby:"
-          hobby = gets.chomp
-            if hobby.empty?
-              break
-            else 
-              puts "Please enter your country of birth:"
-              countryofbirth = gets.chomp 
-              if countryofbirth.empty?
-                break
-              else 
-                puts "Please enter your height in centimeters:"
-                height = gets.chomp 
+    puts "Please enter the name, cohort, hobby and favourite food of each student.\n"
+    puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
+    name_cohort_hobby_food = gets.chomp 
     
-end 
+    while !name_cohort_hobby_food.empty? do 
+        #Ensure the user input contains two commas. This is to separate the values
+        while name_cohort_hobby_food.count(",") != 3
+            puts "ERROR: Please enter the correct format (name,cohort,hobby,favourite food)"
+            name_cohort_hobby_food = gets.chomp
+        end 
+        #Split the input into separate variables
+        #First convert variable to an array
+        input_array = name_cohort_hobby_food.split(",")
+        #Name is first, capitalize first and surname
+        name = input_array[0].split(/ |\_/).map(&:capitalize).join(" ")
+        
+        #cohort second. If no input, add the current month as the cohort
+        #COHORT
+        cohort = input_array[1]
+
+        # if @cohort_month.include?(cohort) 
+        #     cohort = cohort.downcase #Is this needed? 
+        # end 
+    
+        while !@cohort_month.include?(cohort) 
+            month = Time.new 
+            current_month = month.strftime("%B").downcase
+            cohort = current_month.downcase 
+        end 
+
+        #HOBBY
+        hobby = input_array[2]
+
+        #Food
+        food = input_array[3]
+        
+        #New hash pushed to students array
+        #key => :value 
+        @students << {name: name, cohort: cohort, hobby: hobby, food: food} 
+        if @students.count == 1
+            puts "Now we have #{@students.count} student\n"
+        else
+            puts "Now we have #{@students.count} students\n"
+        end 
+        puts "\nPlease enter the name, cohort, hobby and favourite food of the next student.\n"
+        puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n"
+        name_cohort_hobby_food = gets.chomp
+    end
     @students #return array of hashes of the students 
-end
-end 
-end 
-end 
-end 
-end 
 end 
 
-
+def cohort_month(students)
+    cohort_each = students.map {|student|
+        student[:cohort]
+    }
+    cohort_month = cohort_each.uniq
+end 
 
 #Print list of students
 def print_header 
     puts "The students of Villans Academy"
-    puts "-------------"
+    divider = "-------------\n"
+    puts divider.center(30)
 end 
 
 #Iterate over the students array to print each name
-def print(students) #Student names placeholder
-    @students.each do |student|
-      puts "#{student[:name]} (#{student[:cohort]} cohort)"
-    end
+def print(students, cohort_month) #names placeholder
+      cohort_month.each do |cohortmonth|
+        students.each_with_index do |student, index|
+          if student[:cohort] == cohortmonth
+            namecohort = "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+            puts namecohort.center(30)
+            puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
+            puts "\n"
+          # puts interests.center(30)
+          index += 1
+      end
+    end 
 end
 
-#Step 8 Exercise 4
-#Replace the each loop with while or until 
-#Iterate over the students array to print each name
-# def print(students) #Student names placeholder
-#     students 
-#     until students.empty? do  
-#         puts "#{students[:name]} (#{students[:cohort]} cohort)"
-#         break
-#     end 
-# end 
+end
+  
+
 
 #Finally, we print the total number of students using the array.count method
-def print_footer(students)
-    puts "Overall, we have #{@students.count - 1} great students"
-  end
-
-#Step 8 Exercise 1 - DONE :) ✅
-#Print index number and student name
-def studentindex(students)
-    @students.each_with_index {|name, index|
-        puts "#{index + 1}. #{name[:name]}"
-    }
-end
-
-#Step 8 Exercise 2 - DONE :) ✅
-#Only print the students whose names begin with a specific character 
-#In this case, we will choose "D", this will include "Dr" for now
-# def studentindex(students)
-#     students.each_with_index {|name, index|    
-#       if "#{name[:name][0]}" == "D"
-#         puts "#{index + 1}. #{name[:name]}"
-#       end
-# }
-# end
-
-#Step 8 - Exercise 3 ✅
-#Only print student names that are 12 characters or less 
-# def studentindex(students)
-#     @students.each_with_index {|name, index|    
-#       beans = "#{name[:name].split(" ").join("").length}"
-#       if beans.to_i.between?(1, 12)
-#         puts "#{index + 1}. #{name[:name]}"
-#       end
-#     }
-# end
+def print_footer(names)  #names placeholder
+    puts "Overall, we have #{names.count} great students"
+end 
 
 students = input_students #The outcome of the method input_students 
 print_header
-print(students) #Again, outcome of method input_students
+cohort_month = cohort_month(@students)
+print(students, cohort_month) #Again, outcome of method input_students
 print_footer(students) #Outcome of method input_students
-studentindex(students)
 
