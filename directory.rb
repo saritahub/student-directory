@@ -36,13 +36,13 @@ def input_students
     puts "Please enter the name, cohort, hobby and favourite food of each student.\n"
     puts "Cohort months: January, September or October.\n"
     puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
-    name_cohort_hobby_food = gets.chomp 
+    name_cohort_hobby_food = gets.strip 
     
     while !name_cohort_hobby_food.empty? do 
         #Ensure the user input contains two commas. This is to separate the values
         while name_cohort_hobby_food.count(",") != 3
             puts "ERROR: Please enter the correct format (name,cohort,hobby,favourite food)"
-            name_cohort_hobby_food = gets.chomp
+            name_cohort_hobby_food = gets.strip
         end 
         #Split the input into separate variables
         #First convert variable to an array
@@ -81,7 +81,7 @@ def input_students
         puts "\nPlease enter the name, cohort, hobby and favourite food of the next student.\n"
         puts "Cohort months: January, September or October.\n"
         puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n"
-        name_cohort_hobby_food = gets.chomp
+        name_cohort_hobby_food = gets.strip
     end
     @students #return array of hashes of the students 
 end 
@@ -94,13 +94,25 @@ def cohort_month(students)
     @existing_cohorts = cohort_month #Add all existung cohorts to the existing cohort array 
 end 
 
+
+
 #Print list of students
 def print_header 
-    puts "The students of Villans Academy"
+    puts "The students of Villanelle's Academy"
     divider = "-------------\n"
     puts divider.center(30)
 end 
 
+# def existing_cohorts
+#     @existing_cohorts << @students.group_by {|student| student[:cohort]}
+#     @existing_cohorts.each do |month, value|
+#         @the_month = month.to_s.capitalize
+#         puts @the_month
+#         # value.each do |val|
+#         #     puts (val[:name] +  "#{@the_month} cohort")
+#         # end 
+#     end 
+# end 
 
 #Iterate over the students array to print each name
 def print 
@@ -136,6 +148,9 @@ def print
              index += 1
     }
 end
+
+  
+
 
 
 
