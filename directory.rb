@@ -108,7 +108,7 @@ def print
     index = 0
     @students.each { |student|
       if student[:cohort] == @existing_cohorts[0]
-        namecohort = "#{student[:name]} (#{student[:cohort]} cohort)"
+        namecohort = "#{student[:name]} (#{student[:cohort].capitalize} cohort)"
             puts namecohort.center(30)
             puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
             puts "\n"
@@ -118,7 +118,7 @@ def print
 
     @students.each {|student|
         if student[:cohort] == @existing_cohorts[1]
-            namecohort =  "#{student[:name]} (#{student[:cohort]} cohort)"
+            namecohort =  "#{student[:name]} (#{student[:cohort].capitalize} cohort)"
                 puts namecohort.center(30)
                 puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
                 puts "\n"
@@ -128,7 +128,7 @@ def print
 
     @students.each {|student|
         if student[:cohort] == @existing_cohorts[2]
-            namecohort = "#{student[:name]} (#{student[:cohort]} cohort)"
+            namecohort = "#{student[:name]} (#{student[:cohort].capitalize} cohort)"
                 puts namecohort.center(30)
                 puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
                 puts "\n"
