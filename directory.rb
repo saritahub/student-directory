@@ -22,14 +22,19 @@ end
 def process(selection)
     case selection
     when "1"
+      puts "\nThanks for selecting option 1, you can input students now."
       input_students
     when "2"
+      puts "\nThanks for selecting option 2, here is the students list:"
       show_students
     when "3"
-        save_students
+      puts "\nThanks for selecting option 3, the student's list is saved."
+      save_students
     when "4"
-        load_students
+      puts "\nThanks for selecting option 4, loading the student's list"
+      load_students
     when "9"
+      puts "\n Bye!"
       exit
     else  
       puts "I don't know what you mean, try again" 
@@ -37,7 +42,7 @@ def process(selection)
 end 
 
 def input_students
-    puts "Please enter the name, cohort, hobby and favourite food of each student.\n"
+    puts "\nPlease enter the name, cohort, hobby and favourite food of each student.\n"
     puts "Cohort months: January, September or October.\n"
     puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
     @name_cohort_hobby_food = STDIN.gets.strip 
@@ -115,6 +120,7 @@ def print_students_list
     @students.each { |student|
       if student[:cohort] == @existing_cohorts[0]
         namecohort = "#{student[:name]} (#{student[:cohort].capitalize} cohort)"
+            puts "\n"
             puts namecohort.center(30)
             puts "Hobby: #{student[:hobby]},\nFave food: #{student[:food]}"
             puts "\n"
@@ -193,6 +199,7 @@ def cohort_month(students)
     @existing_cohorts = cohort_month #Add all existung cohorts to the existing cohort array 
 end 
 
+
 try_load_students
 interactive_menu
 students = input_students #The outcome of the method input_students 
@@ -200,3 +207,4 @@ print_header
 cohort_month = cohort_month(@students)
 print #(students, cohort_month) #Again, outcome of method input_students
 print_footer(@students) #Outcome of method input_students
+
