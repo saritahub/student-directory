@@ -12,31 +12,12 @@ def print_menu
     puts "9. Exit"
 end 
 
-def show_students
-    print_header
-    cohort_month = cohort_month(@students)
-    print_students_list #(students, cohort_month) #Again, outcome of method input_students
-    print_footer(@students) #Outcome of method input_students
-end 
-
-def save_students
-    file = File.open("students.csv", "w")
-    @students.each do |student|
-        student_data = [student[:name], student[:cohort]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+def interactive_menu
+    loop do
+    print_menu
+    process(STDIN.gets.chomp)
     end 
-    file.close 
 end 
-
-def load_students
-    file = File.open("students.csv", "r")
-    file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym}
-    end
-    file.close
-end
 
 def process(selection)
     case selection
@@ -55,32 +36,22 @@ def process(selection)
     end 
 end 
 
-def interactive_menu
-    loop do
-    print_menu
-    process(gets.chomp)
-    end 
-end 
-
-
-
-
 def input_students
     puts "Please enter the name, cohort, hobby and favourite food of each student.\n"
     puts "Cohort months: January, September or October.\n"
     puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
-    @name_cohort_hobby_food = gets.strip 
+    @name_cohort_hobby_food = STDIN.gets.strip 
     if @name_cohort_hobby_food.empty?
         puts "BLANK INPUT: Please enter at least one student cohort, hobby and favourite food of each student.\n"
         puts "Cohort months: January, September or October.\n"
         puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n" 
-        @name_cohort_hobby_food = gets.strip 
+        @name_cohort_hobby_food = STDIN.gets.strip 
     end  
     while !@name_cohort_hobby_food.empty? do 
         #Ensure the user input contains two commas. This is to separate the values
         while @name_cohort_hobby_food.count(",") != 3
             puts "ERROR: Please enter the correct format (name,cohort,hobby,favourite food)"
-            @name_cohort_hobby_food = gets.strip
+            @name_cohort_hobby_food = STDIN.gets.strip
         end 
         #Split the input into separate variables
         #First convert variable to an array
@@ -91,10 +62,6 @@ def input_students
         #cohort second. If no input, add the current month as the cohort
         #COHORT
         cohort = input_array[1]
-
-        # if @cohort_month.include?(cohort) 
-        #     cohort = cohort.downcase #Is this needed? 
-        # end 
     
         while !@cohort_month.include?(cohort) 
             month = Time.new 
@@ -119,29 +86,26 @@ def input_students
         puts "\nPlease enter the name, cohort, hobby and favourite food of the next student.\n"
         puts "Cohort months: January, September or October.\n"
         puts "Format: name,cohort,hobby,favourite food. To finish, just hit return twice.\n"
-        @name_cohort_hobby_food = gets.strip
+        @name_cohort_hobby_food = STDIN.gets.strip
     end
     @students #return array of hashes of the students 
 end 
  
 
-def cohort_month(students)
-    cohort_each = students.map {|student|
-        student[:cohort]
-    }
-    cohort_month = cohort_each.uniq   #List of existing cohorts 
-    @existing_cohorts = cohort_month #Add all existung cohorts to the existing cohort array 
+def show_students
+    print_header
+    cohort_month = cohort_month(@students)
+    print_students_list #(students, cohort_month) #Again, outcome of method input_students
+    print_footer(@students) #Outcome of method input_students
 end 
-
-
 
 #Print list of students
 def print_header 
     if !@name_cohort_hobby_food.empty?
-    puts "The students of Villanelle's Academy"
-    divider = "-------------\n"
-    puts divider.center(30)
-end 
+      puts "The students of Villanelle's Academy"
+      divider = "-------------\n"
+      puts divider.center(30)
+    end 
 end 
 
 #Iterate over the students array to print each name
@@ -188,15 +152,51 @@ def print_footer(names)  #names placeholder
     else 
         puts "No student information yet"
     end 
+end
+
+def save_students
+    file = File.open("students.csv", "w")
+    @students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+    end 
+    file.close 
 end 
 
+def load_students(filename = "students.csv") #Sets the default filename
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      @students << {name: name, cohort: cohort.to_sym}
+    end
+    file.close
+end
 
+def try_load_students
+    filename = ARGV.first 
+    return if filename.nil? 
+    if File.exist?(filename) 
+      load_students(filename)
+       puts "Loaded #{@students.count} from #{filename}"
+    else 
+      puts "Sorry, #{filename} doesn't exist."
+      exit 
+    end
+end
 
+def cohort_month(students)
+    cohort_each = students.map {|student|
+        student[:cohort]
+    }
+    cohort_month = cohort_each.uniq   #List of existing cohorts 
+    @existing_cohorts = cohort_month #Add all existung cohorts to the existing cohort array 
+end 
+
+try_load_students
 interactive_menu
 students = input_students #The outcome of the method input_students 
 print_header
 cohort_month = cohort_month(@students)
 print #(students, cohort_month) #Again, outcome of method input_students
 print_footer(@students) #Outcome of method input_students
-
-
